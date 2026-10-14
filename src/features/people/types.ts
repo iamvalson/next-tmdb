@@ -17,3 +17,8 @@ export type PersonMovieCredit = {
   vote_average: number;
   popularity: number;
 };
+
+export type PersonMovieCredits = {
+  id: number;
+  cast: PersonMovieCredit[];
+};
