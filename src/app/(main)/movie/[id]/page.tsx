@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { MovieHero } from "@/features/movies/components/MovieHero";
 import { CastList } from "@/features/movies/components/CastList";
 import { getCast, getMovie } from "@/features/movies/services";
+import { requireUser } from "@/features/auth/session";
 
 export const metadata: Metadata = {
   title: `Movie details | ${siteConfig.name}`,
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 export default async function MoviePage({ params }: PageProps<"/movie/[id]">) {
   const { id } = await params;
+  await requireUser(`/movie/${id}`);
   if (!/^[1-9]\d*$/.test(id) || !Number.isSafeInteger(Number(id))) notFound();
 
   const [movie, cast] = await Promise.all([getMovie(id), getCast(id)]);

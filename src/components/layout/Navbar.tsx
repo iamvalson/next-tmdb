@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { Film } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentUser } from "@/features/auth/session";
+import { UserMenu } from "@/features/auth/components/UserMenu";
 
 export function Navbar() {
   return (
@@ -19,7 +23,10 @@ export function Navbar() {
           <Film aria-hidden="true" className="size-5 text-primary" />
           {siteConfig.name}
         </Link>
-        <nav aria-label="Main navigation" className="flex flex-wrap gap-4">
+        <nav
+          aria-label="Main navigation"
+          className="flex flex-wrap items-center gap-4"
+        >
           {siteConfig.navLinks.map((link) => (
             <Link
               key={link.href}
@@ -29,8 +36,22 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Suspense fallback={<Skeleton className="h-9 w-28" />}>
+            <AccountControls />
+          </Suspense>
         </nav>
       </div>
     </header>
+  );
+}
+
+async function AccountControls() {
+  const user = await getCurrentUser();
+  return user ? (
+    <UserMenu user={user} />
+  ) : (
+    <Link href="/login" className="text-sm font-medium">
+      Sign in
+    </Link>
   );
 }

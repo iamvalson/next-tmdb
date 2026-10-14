@@ -7,6 +7,7 @@ import { getMovie } from "@/features/movies/services";
 import { getPerson, getPersonCredits } from "@/features/people/services";
 import { PersonProfile } from "@/features/people/components/PersonProfile";
 import { Filmography } from "@/features/people/components/Filmography";
+import { requireUser } from "@/features/auth/session";
 
 export const metadata: Metadata = { title: `Cast member | ${siteConfig.name}` };
 
@@ -14,6 +15,7 @@ export default async function PersonPage({
   params,
 }: PageProps<"/movie/[id]/cast/[personId]">) {
   const { id, personId } = await params;
+  await requireUser(`/movie/${id}/cast/${personId}`);
   if (
     [id, personId].some(
       (value) =>
