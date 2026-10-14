@@ -25,7 +25,7 @@ export function Navbar() {
         </Link>
         <nav
           aria-label="Main navigation"
-          className="flex flex-wrap items-center gap-4"
+          className="flex w-full min-w-0 flex-wrap items-center justify-between gap-4 sm:w-auto sm:justify-end"
         >
           {siteConfig.navLinks.map((link) => (
             <Link
@@ -50,7 +50,10 @@ async function AccountControls() {
   return user ? (
     <UserMenu user={user} />
   ) : (
-    <Link href="/login" className="text-sm font-medium">
+    <Link
+      href="/login"
+      className="rounded-sm text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring"
+    >
       Sign in
     </Link>
   );

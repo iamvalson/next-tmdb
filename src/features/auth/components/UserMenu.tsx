@@ -34,7 +34,10 @@ export function UserMenu({ user }: UserMenuProps) {
         </Avatar>
         <span className="max-w-32 truncate">{name}</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-56">
+      <DropdownMenuContent
+        align="end"
+        className="w-56 max-w-[calc(100vw-2rem)] min-w-0"
+      >
         <DropdownMenuGroup>
           <DropdownMenuLabel>
             {name}
