@@ -6,9 +6,18 @@ import { tmdbImage } from "@/lib/tmdb/image";
 import { formatRating, getYear } from "@/lib/utils";
 import type { Movie } from "../types";
 
-export function MovieCard({ movie }: { movie: Movie }) {
+type MovieCardProps = {
+  movie: Pick<
+    Movie,
+    "id" | "title" | "poster_path" | "release_date" | "vote_average"
+  >;
+  headingLevel?: 2 | 3;
+};
+
+export function MovieCard({ movie, headingLevel = 2 }: MovieCardProps) {
   const poster = tmdbImage(movie.poster_path);
   const rating = formatRating(movie.vote_average);
+  const Title = headingLevel === 3 ? "h3" : "h2";
 
   return (
     <Link
@@ -33,9 +42,9 @@ export function MovieCard({ movie }: { movie: Movie }) {
           )}
         </div>
         <CardContent className="gap-2 p-4">
-          <h2 className="line-clamp-2 min-h-10 leading-5 font-semibold">
+          <Title className="line-clamp-2 min-h-10 leading-5 font-semibold">
             {movie.title}
-          </h2>
+          </Title>
           <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
             <span>{getYear(movie.release_date)}</span>
             <span
