@@ -20,7 +20,10 @@ export async function tmdbFetch<T>(
   endpoint: string,
   { params = {}, revalidate = 3600 }: FetchOptions = {},
 ): Promise<T> {
-  const url = new URL(`${env.TMDB_BASE_URL}${endpoint}`);
+  const baseUrl = env.TMDB_BASE_URL.replace(/\/+$/, "");
+  const path = endpoint.replace(/^\/+/, "");
+  // Keep the /3 base path when joining, regardless of surrounding slashes.
+  const url = new URL(`${baseUrl}/${path}`);
   const headers: HeadersInit = { Accept: "application/json" };
 
   // TMDB gives two credentials. A long token starting with "eyJ" is the
