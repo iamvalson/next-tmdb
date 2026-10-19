@@ -13,11 +13,13 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error(
-    "Invalid environment variables:",
-    parsed.error.flatten().fieldErrors,
+  const invalidVariables = Object.keys(parsed.error.flatten().fieldErrors);
+
+  throw new Error(
+    `Invalid environment variables: ${invalidVariables.join(", ")}. ` +
+      "Set them in .env.local for local development or in your hosting provider's " +
+      "environment settings for the deployment being built, then rebuild.",
   );
-  throw new Error("Invalid environment variables. Check your .env.local file.");
 }
 
 export const env = parsed.data;

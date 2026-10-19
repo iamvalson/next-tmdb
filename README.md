@@ -68,6 +68,12 @@ Zod validates configuration in `src/lib/env.ts`. That module is server-only. `.e
 
 For a hosted installation, configure the real HTTPS origin and its matching GitHub OAuth callback. `AUTH_URL` can specify the public origin when Auth.js cannot infer it correctly. `trustHost` is enabled in `auth.ts`, so the hosting setup must supply trusted host and forwarded headers. Keep a stable `AUTH_SECRET` across application instances.
 
+### Hosted builds
+
+`.env.local` is ignored by Git and is not included when a hosting provider clones this repository. Before building, add `TMDB_API_KEY`, `AUTH_SECRET`, `AUTH_GITHUB_ID`, and `AUTH_GITHUB_SECRET` to the provider's environment settings. `TMDB_BASE_URL` is optional; omit it to use the default rather than setting it to an empty value.
+
+Make the variables available during both the build and application runtime, and select the environment being deployed (for example, Production or Preview). Redeploy after saving changes. Configuration is validated when server modules load, including while Next.js collects route data for `/api/auth/[...nextauth]`.
+
 ## Commands
 
 | Command             | Purpose                                                      |
@@ -193,7 +199,7 @@ Local integration checks use a short-lived synthetic session to exercise session
 
 ## Troubleshooting
 
-- **Invalid environment variables:** check the variable names and replace all placeholders in `.env.local`, then restart the server.
+- **Invalid environment variables / failed to collect configuration for `/api/auth/[...nextauth]`:** the error lists the variables that failed validation. For local runs, check `.env.local` in the project root, then restart the server. For hosted builds, set the variables in the provider's environment settings for the deployment being built and redeploy; your local file is not uploaded through Git. Check the earlier validation error when the final build message only says "Failed to collect page data."
 - **GitHub callback mismatch:** ensure the protocol, hostname, port, and `/api/auth/callback/github` path match the OAuth app registration. `localhost` and `127.0.0.1` are different origins.
 - **Unable to sign in:** confirm the OAuth client ID and secret belong to the same app, then inspect the server log.
 - **TMDB request failure:** check the credential and network connection. The wrapper's HTTP status helps distinguish rejected credentials from missing resources.
